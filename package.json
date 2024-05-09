@@ -1,0 +1,25 @@
+{
+  "name": "url-shortner",
+  "version": "1.0.0",
+  "description": "Api for Url Shortener",
+  "main": "backend/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aswanidevan/URL-SHORTNER.git"
+  },
+  "author": "Aswani Devan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aswanidevan/URL-SHORTNER/issues"
+  },
+  "homepage": "https://github.com/aswanidevan/URL-SHORTNER#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "crypto": "^1.0.1",
+    "express": "^4.19.2",
+    "nodemon": "^3.1.0"
+  }
+}
