@@ -1,8 +1,11 @@
 const mongoose=require('mongoose');
 
 
+<<<<<<< HEAD
 //SCHEMAS
 //basic schema for saving url 
+=======
+>>>>>>> db21164c5e938a0c099fb788a5a58d86b0012045
 const urlEncodedSchema= mongoose.Schema({
     shortUrl:{
         type:String,
@@ -15,6 +18,10 @@ const urlEncodedSchema= mongoose.Schema({
 
 });
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> db21164c5e938a0c099fb788a5a58d86b0012045
 //implement in next commit
 
 // const urlIdCounterSchema= mongoose.Schema({
@@ -30,7 +37,11 @@ const urlEncodedSchema= mongoose.Schema({
 // });
 
 
+<<<<<<< HEAD
 //MODELS
+=======
+
+>>>>>>> db21164c5e938a0c099fb788a5a58d86b0012045
 const urlEncodedDB=mongoose.model("urlEncoded",urlEncodedSchema);
 
 
