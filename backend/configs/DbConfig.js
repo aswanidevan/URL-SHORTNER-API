@@ -7,7 +7,7 @@ const connectDb= async()=>{
         console.log("mongoDb connected");
     }
     catch(error){
-        console.log(error);
+        console.log("Connection Failed with Mongo Db \n"+error);
     }
 }
  module.exports= connectDb;

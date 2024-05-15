@@ -6,9 +6,11 @@ const shortenUrl=async (reqUrl,urlSize=5)=>{                                //Sh
     let msg='';
     let isNotUnique = true;
     // To be changed with better algoritm for mongoDb indexing
+
     const hashed = crypto.createHash('sha256').update(reqUrl).digest('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/[=uU]/g, '');
+    let hashedLength=hashed.length;
     try {
-    while (isNotUnique) {
+    while (isNotUnique&& parseInt(hashedLength)>0) {
         const startIndex = Math.floor(Math.random() * (hashed.length - urlSize));
         shortened = hashed.substring(startIndex, startIndex+urlSize);
 
@@ -16,14 +18,22 @@ const shortenUrl=async (reqUrl,urlSize=5)=>{                                //Sh
         const queryResult = await query.findOne();                          //Check Url Already Exist
 
          if (queryResult==null) isNotUnique = false;
+         hashedLength--;
       
     }
+    if(!isNotUnique){
     const UrlEncodedDB= new urlEncodedDB({  shortUrl: shortened, orginalUrl: reqUrl});
     await UrlEncodedDB.save();
     msg='Url Shortened Sucess';
+    }
+    else{
+        msg='Url Shortened Failed.Try Again Later Or Different Url size';
+    }
+
     } catch (error) {
         console.log(error);
-        msg=error;
+        msg="Connection With database Failed or Timed Out";
+
     }
     return {
         shortenedUrl: shortened,
@@ -38,7 +48,7 @@ const findOrginalUrl=async (shortUrl)=>{
     const query = urlEncodedDB.where({ shortUrl: shortUrl });
     const queryResult = await query.findOne();                              //fetch url from MongoDb
     let msg='Redirecting';
-    let statusCode=302;
+    let statusCode=200;
     if(queryResult==null) {
         msg='Link Not Found';
         statusCode=200;
@@ -56,17 +66,18 @@ const findOrginalUrl=async (shortUrl)=>{
             requestedShortUrl:queryResult.shortUrl,
             statusCode:statusCode,
             msg:msg,
-            };
-        
+            };        
     }
+
     catch(error){
+        msg="Connection With database Failed or Timed Out";
         console.log(error);
     return { 
         linkExist:false, 
         originalUrl:'',
         requestedShortUrl:shortUrl,
-        statusCode:404,
-        msg:error,
+        statusCode:200,
+        msg:msg,
     };}
 }
 
@@ -88,12 +99,18 @@ const getOriginalUrl=async (req, res) => {                                  //Re
     const  {shortUrl}  = req.params;
     console.log(`request recieved with url ${shortUrl}`);       
     const retrivedUrl=await findOrginalUrl(shortUrl);
-    res.status(retrivedUrl.statusCode).send(retrivedUrl);      
+    res.status(200).send(retrivedUrl);      
 }
+const noContentAccess=async (req, res) => {
+    console.log('request recieved on non listed route');
+    res.send({response:'API URL INVALID'});
+}
+
 
 module.exports={
     checkApi,
     shortenUrlRequest,
     getOriginalUrl,
+    noContentAccess,
 
 };
