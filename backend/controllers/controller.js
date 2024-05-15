@@ -3,10 +3,11 @@ const crypto=require('crypto');
 
 const shortenUrl=async (reqUrl,urlSize=5)=>{                                //Shorten url function                    
     let shortened;
+    let isShortened=false;
     let msg='';
     let isNotUnique = true;
     // To be changed with better algoritm for mongoDb indexing
-
+    
     const hashed = crypto.createHash('sha256').update(reqUrl).digest('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/[=uU]/g, '');
     let hashedLength=hashed.length;
     try {
@@ -21,21 +22,28 @@ const shortenUrl=async (reqUrl,urlSize=5)=>{                                //Sh
          hashedLength--;
       
     }
-    if(!isNotUnique){
+    
+    if(!isNotUnique && reqUrl!=''&& urlSize>4 ){
     const UrlEncodedDB= new urlEncodedDB({  shortUrl: shortened, orginalUrl: reqUrl});
     await UrlEncodedDB.save();
     msg='Url Shortened Sucess';
+    isShortened=true;
     }
     else{
         msg='Url Shortened Failed.Try Again Later Or Different Url size';
+        shortened='';
+        
     }
 
     } catch (error) {
         console.log(error);
+        console.log("test ");
         msg="Connection With database Failed or Timed Out";
+        shortened='';
 
     }
     return {
+        isShortened:isShortened,
         shortenedUrl: shortened,
         originalUrl:reqUrl,
         statusCode:200,
@@ -90,7 +98,6 @@ const checkApi= async (req,res)=>{                                          //Te
 
 const shortenUrlRequest=async (req, res) => {                                //Receives Url  to shorten sends back  encoded url as per url Size
     console.log(`request recieved with url test ${req.body.originalUrl}  ${req.body.urlSize}`);
-    //const parseUrl = req.body.originalUrl.replace(/^(?:https?:\/\/)?(?:www\.)?/i, '') ;      //Parse url if redirect requires no http as per production
     const shortenedUrlResponse=await shortenUrl(req.body.originalUrl,parseInt(req.body.urlSize));
     res.status(200).send(shortenedUrlResponse);
 }
