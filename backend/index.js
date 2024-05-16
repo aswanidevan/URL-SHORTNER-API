@@ -7,7 +7,7 @@ var cors = require('cors');
 
 const app=express();
 const PORT=process.env.PORT ||3000;
-const allowedOrigins = [ process.env.APP_URL];
+const allowedOrigins = [ process.env.APP_URL, process.env.APP_URL-1, process.env.APP_URL-2];
 //MIDDLEWARE
 
 app.use(express.urlencoded({ extended: true }));
