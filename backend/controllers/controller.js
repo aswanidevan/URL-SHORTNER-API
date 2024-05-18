@@ -23,7 +23,7 @@ const shortenUrl=async (reqUrl,urlSize=5)=>{                                //Sh
       
     }
     
-    if(!isNotUnique && reqUrl!=''&& urlSize>4 ){
+    if(!isNotUnique && reqUrl!=''&& urlSize>=4 ){
     const UrlEncodedDB= new urlEncodedDB({  shortUrl: shortened, orginalUrl: reqUrl});
     await UrlEncodedDB.save();
     msg='Url Shortened Sucess';
